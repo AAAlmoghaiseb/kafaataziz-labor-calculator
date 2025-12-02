@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>الحاسبة العمالية - شركة كفاءات عبدالعزيز</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f5f7fa;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        header {
+            background-color: #0f5132;
+            color: #fff;
+            padding: 1.2rem 0;
+        }
+        header h1 {
+            font-size: 1.7rem;
+            margin: 0;
+        }
+        header small {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .card {
+            border-radius: 0.75rem;
+        }
+        .results-box {
+            background-color: #d8ca89;
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        .results-box .label {
+            font-weight: 500;
+        }
+        .history-table tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+        @media print {
+            header, .no-print, .history-section {
+                display: none !important;
+            }
+            .results-box {
+                background-color: #fff !important;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h1 class="mb-1">الحاسبة العمالية</h1>
+                <small>شركة كفاءات عبدالعزيز – أداة تقديرية لحساب الحقوق العمالية</small>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container my-4">
+
+    <!-- شريط تنبيه -->
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="bi bi-info-circle-fill ms-2"></i>
+        <div>
+            <strong>أداة تقديرية – </strong>
+            النتائج تقريبية وقد تختلف بحسب تفاصيل كل حالة، ولا تُعتبر مرجعًا قانونيًا نهائيًا.
+        </div>
+    </div>
+
+    <!-- بيانات الحساب -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="mb-3">
+                <span class="border-end border-4 border-success ps-2"></span>
+                بيانات الحساب
+            </h5>
+
+            <div class="row gy-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">اسم الموظف</label>
+                    <input type="text" id="employeeName" class="form-control" placeholder="مثال: عبدالعزيز المغيصب">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">اسم جهة العمل</label>
+                    <input type="text" id="employerName" class="form-control" placeholder="مثال: كفاءات عبدالعزيز">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">نوع الموظف</label>
+                    <select id="employeeType" class="form-select">
+                        <option value="سعودي" selected>سعودي</option>
+                        <option value="غير سعودي">غير سعودي</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">الأجر الأساسي (شهريًا)</label>
+                    <input type="number" id="basicSalary" class="form-control" placeholder="مثال: 20000">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">البدلات (شهريًا)</label>
+                    <input type="number" id="allowances" class="form-control" placeholder="مثال: 5000">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">الأجر بعد حسم التأمينات</label>
+                    <input type="number" id="netSalary" class="form-control" placeholder="مثال: 4500">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">إجمالي الأجر الشهري (يُحسب آليًا إذا ترك فارغًا)</label>
+                    <input type="number" id="totalMonthlySalary" class="form-control" placeholder="يُحسب من الأساسي + البدلات" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">مدة الخدمة (بالسنوات)</label>
+                    <input type="number" step="0.1" id="serviceYears" class="form-control" placeholder="مثال: 5.5">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">الأجور المتأخرة (عدد الأشهر)</label>
+                    <input type="number" step="0.1" id="arrearsMonths" class="form-control" placeholder="مثال: 2">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">أيام الإجازة المستحقة</label>
+                    <input type="number" id="vacationDays" class="form-control" placeholder="مثال: 10">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">ساعات العمل الإضافي</label>
+                    <input type="number" id="overtimeHours" class="form-control" placeholder="مثال: 5">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">أيام الغياب</label>
+                    <input type="number" id="absenceDays" class="form-control" placeholder="مثال: 1">
+                </div>
+
+            </div>
+
+            <!-- الأزرار -->
+            <div class="text-center my-4 no-print">
+                <button type="button" id="calculateBtn" class="btn btn-success ms-2">
+                    <i class="bi bi-calculator"></i> احسب واحفظ العملية
+                </button>
+                <button type="button" id="clearFormBtn" class="btn btn-outline-secondary ms-2">
+                    تصفية الحقول
+                </button>
+                <button type="button" id="printBtn" class="btn btn-outline-primary">
+                    <i class="bi bi-printer"></i> طباعة النتائج
+                </button>
+            </div>
+
+            <!-- النتائج الحالية -->
+            <h5 class="mt-3 mb-2">
+                <span class="border-end border-4 border-success ps-2"></span>
+                النتائج الحالية
+            </h5>
+
+            <div class="results-box">
+                <div class="row text-center">
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">مكافأة نهاية الخدمة (مادة 84 – تقديرية)</div>
+                        <div id="endOfServiceResult">0</div>
+                    </div>
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">الأجور المتأخرة</div>
+                        <div id="arrearsResult">0</div>
+                    </div>
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">أجر الإجازة</div>
+                        <div id="vacationPayResult">0</div>
+                    </div>
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">أجر العمل الإضافي</div>
+                        <div id="overtimePayResult">0</div>
+                    </div>
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">مبلغ الحسم بسبب الغياب</div>
+                        <div id="absenceDeductionResult">0</div>
+                    </div>
+                    <div class="col-md-4 col-6 mb-2">
+                        <div class="label">الإجمالي التقديري المستحق</div>
+                        <div id="totalResult">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-2 text-muted small">
+                * هذه النتائج تقريبية لغرض التقدير فقط، ولا تُعد مرجعًا قانونيًا نهائيًا.
+            </p>
+        </div>
+    </div>
+
+    <!-- سجل العمليات -->
+    <section class="card history-section">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    <span class="border-end border-4 border-success ps-2"></span>
+                    سجل العمليات (يُحفظ في هذا المتصفح فقط)
+                </h5>
+                <div class="no-print">
+                    <button id="clearHistoryBtn" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i> مسح السجل
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm align-middle history-table">
+                    <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>اسم الموظف</th>
+                        <th>جهة العمل</th>
+                        <th>الأساسي</th>
+                        <th>إجمالي الأجر الشهري</th>
+                        <th>مكافأة نهاية الخدمة</th>
+                        <th>الإجمالي المستحق</th>
+                        <th>تاريخ ووقت الحفظ</th>
+                    </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                    <!-- يتم تعبئته من JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // عناصر النموذج
+    const ids = {
+        employeeName: 'employeeName',
+        employerName: 'employerName',
+        employeeType: 'employeeType',
+        basicSalary: 'basicSalary',
+        allowances: 'allowances',
+        netSalary: 'netSalary',
+        totalMonthlySalary: 'totalMonthlySalary',
+        serviceYears: 'serviceYears',
+        arrearsMonths: 'arrearsMonths',
+        vacationDays: 'vacationDays',
+        overtimeHours: 'overtimeHours',
+        absenceDays: 'absenceDays'
+    };
+
+    // عناصر النتائج
+    const resIds = {
+        endOfService: 'endOfServiceResult',
+        arrears: 'arrearsResult',
+        vacationPay: 'vacationPayResult',
+        overtimePay: 'overtimePayResult',
+        absenceDeduction: 'absenceDeductionResult',
+        total: 'totalResult'
+    };
+
+    const calculateBtn = document.getElementById('calculateBtn');
+    const clearFormBtn = document.getElementById('clearFormBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    function num(id) {
+        const el = document.getElementById(id);
+        if (!el) return 0;
+        const v = parseFloat(String(el.value).replace(/,/g, ''));
+        return isNaN(v) ? 0 : v;
+    }
+
+    function round2(x) {
+        return Math.round(x * 100) / 100;
+    }
+
+    function calculate() {
+        const basic = num(ids.basicSalary);
+        const allow = num(ids.allowances);
+        const net = num(ids.netSalary);
+        const years = num(ids.serviceYears);
+        const arrearsMonths = num(ids.arrearsMonths);
+        const vacationDays = num(ids.vacationDays);
+        const overtimeHours = num(ids.overtimeHours);
+        const absenceDays = num(ids.absenceDays);
+
+        // إجمالي الأجر الشهري (إن لم يُدخل صافي الأجر نستخدم الأساسي+البدلات)
+        const monthlyTotal = net > 0 ? net : (basic + allow);
+        if (monthlyTotal > 0) {
+            document.getElementById(ids.totalMonthlySalary).value = round2(monthlyTotal);
+        }
+
+        // نهاية الخدمة (مادة 84 تقريبية): نصف شهر عن كل سنة من أول خمس سنوات، وشهر عن كل سنة بعد ذلك
+        let eos = 0;
+        if (years > 0 && monthlyTotal > 0) {
+            const first5 = Math.min(years, 5);
+            const rest = Math.max(years - 5, 0);
+            eos = first5 * (monthlyTotal / 2) + rest * monthlyTotal;
+        }
+
+        // الأجور المتأخرة
+        const arrears = arrearsMonths * monthlyTotal;
+
+        // أجر الإجازة: عدد الأيام × أجر اليوم
+        const dailyRate = monthlyTotal / 30;
+        const vacationPay = vacationDays * dailyRate;
+
+        // أجر العمل الإضافي: 1.5 × أجر الساعة × الساعات الإضافية (نفترض 8 ساعات عمل في اليوم)
+        const hourRate = monthlyTotal / (30 * 8);
+        const overtimePay = overtimeHours * hourRate * 1.5;
+
+        // خصم الغياب
+        const absenceDeduction = absenceDays * dailyRate;
+
+        const total = eos + arrears + vacationPay + overtimePay - absenceDeduction;
+
+        // عرض النتائج
+        document.getElementById(resIds.endOfService).textContent = round2(eos);
+        document.getElementById(resIds.arrears).textContent = round2(arrears);
+        document.getElementById(resIds.vacationPay).textContent = round2(vacationPay);
+        document.getElementById(resIds.overtimePay).textContent = round2(overtimePay);
+        document.getElementById(resIds.absenceDeduction).textContent = round2(absenceDeduction);
+        document.getElementById(resIds.total).textContent = round2(total);
+
+        // نرجع كائن النتيجة للحفظ في السجل
+        return {
+            employeeName: document.getElementById(ids.employeeName).value,
+            employerName: document.getElementById(ids.employerName).value,
+            employeeType: document.getElementById(ids.employeeType).value,
+            basicSalary: basic,
+            allowances: allow,
+            netSalary: net,
+            serviceYears: years,
+            arrearsMonths,
+            vacationDays,
+            overtimeHours,
+            absenceDays,
+            monthlyTotal: round2(monthlyTotal),
+            eos: round2(eos),
+            arrearsAmount: round2(arrears),
+            vacationPay: round2(vacationPay),
+            overtimePay: round2(overtimePay),
+            absenceDeduction: round2(absenceDeduction),
+            total: round2(total),
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    function loadHistory() {
+        const data = JSON.parse(localStorage.getItem('kafaatazizHistory') || '[]');
+        const tbody = document.getElementById('historyBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        data.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${item.employeeName || '-'}</td>
+                <td>${item.employerName || '-'}</td>
+                <td>${item.basicSalary}</td>
+                <td>${item.monthlyTotal}</td>
+                <td>${item.eos}</td>
+                <td>${item.total}</td>
+                <td>${new Date(item.timestamp).toLocaleString('ar-SA')}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function saveToHistory(resultObj) {
+        const data = JSON.parse(localStorage.getItem('kafaatazizHistory') || '[]');
+        data.push(resultObj);
+        localStorage.setItem('kafaatazizHistory', JSON.stringify(data));
+        loadHistory();
+    }
+
+    function clearForm() {
+        document.querySelectorAll('input[type="number"], input[type="text"]').forEach(el => {
+            if (el.id !== 'totalMonthlySalary') el.value = '';
+        });
+        document.getElementById(ids.totalMonthlySalary).value = '';
+        Object.values(resIds).forEach(id => {
+            document.getElementById(id).textContent = '0';
+        });
+    }
+
+    // زر الحساب
+    if (calculateBtn) {
+        calculateBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const resultObj = calculate();
+            saveToHistory(resultObj);
+        });
+    }
+
+    // زر تصفية الحقول
+    if (clearFormBtn) {
+        clearFormBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            clearForm();
+        });
+    }
+
+    // زر الطباعة
+    if (printBtn) {
+        printBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.print();
+        });
+    }
+
+    // زر مسح السجل
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', function () {
+            if (confirm('هل أنت متأكد من مسح سجل العمليات من هذا المتصفح؟')) {
+                localStorage.removeItem('kafaatazizHistory');
+                loadHistory();
+            }
+        });
+    }
+
+    // تحميل السجل عند فتح الصفحة
+    loadHistory();
+});
+</script>
+
+</body>
+</html>
